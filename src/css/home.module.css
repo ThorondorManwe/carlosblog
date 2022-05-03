@@ -1,0 +1,30 @@
+.home{
+    display:grid;
+    grid-template-columns: 1fr 740px 1fr;
+    grid-gap: 20px;
+}
+
+.right__sec{
+    min-height: 100vh;
+    border: 1px solid black;
+}
+
+.left__sec{
+    min-height:100vh;
+    border: 1px solid green;
+}
+
+.blog__sec{
+    min-height:100vh;
+    border: 1px solid red;
+}
+
+@media screen and (max-width: 992px) {
+    .right__sec, .left__sec{
+        display: none;
+    }
+    .blog__sec{
+        width: 100vw;
+        min-height:100vh;
+    }
+}
