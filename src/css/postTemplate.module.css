@@ -58,3 +58,22 @@
     width: 100%;
     height: auto;
 }
+
+.author h1 {
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+    font-size: 48px;
+}
+
+.author a {
+    display: inline-block;
+    margin: 0.5rem;
+    font-size: 2rem;
+    color: var(--mainBlack);
+    transition: var(--mainTransition);
+}
+
+.author a:hover {
+    color: #15cfff;
+}
