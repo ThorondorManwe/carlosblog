@@ -2,9 +2,10 @@ import React from 'react'
 import Image from "gatsby-image"
 import * as styles from "../css/postcard.module.css"
 import { Link } from "gatsby"
+import { kebabCase } from 'lodash'
 
 const PostCard = ({ post }) => {
-  const { title, date, author, slug } = post.frontmatter
+  const { title, date, author, slug, tags } = post.frontmatter
   const img = post.frontmatter.image.childImageSharp.fluid
   return (
     <article className={styles.card}>
@@ -14,9 +15,14 @@ const PostCard = ({ post }) => {
       <div className={styles.info}>
         <div>
           <h2>{title}</h2>
-          <h6>
+          <h5>
             <span>por {author}</span> /<span>{date}</span>
-          </h6>
+          </h5>
+          <h4>
+          {tags.map((tag, index) => <Link to={`/tags/${kebabCase(tag)}`}
+                                            key={index} className={styles.tagLink}>#{tag} </Link>)
+                        }
+          </h4>
           <p>{post.excerpt}</p>
           <Link to={slug} className={styles.link}>
             Leer más

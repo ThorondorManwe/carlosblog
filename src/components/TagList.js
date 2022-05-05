@@ -1,6 +1,8 @@
 import React from 'react';
 import * as styles from "../css/taglist.module.css"
 import { Link } from "gatsby"
+import { kebabCase } from 'lodash'
+
 const TagList = ({ tags }) => {
     var tmpArr = [];
     tags.forEach(element => {
@@ -12,7 +14,7 @@ const TagList = ({ tags }) => {
             <div className={styles.boxTag}>
                 <h2>Etiquetas</h2>
                 {tmpArr.map((tag, index) => {
-                    return <Link to={`/tags/${tag}`} key={index} className={styles.link}>
+                    return <Link to={`/tags/${kebabCase(tag)}`} key={index} className={styles.link}>
                                 {tag}
                             </Link>
                 })}

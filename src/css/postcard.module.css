@@ -15,9 +15,13 @@
     margin-bottom: 10px;
 }
 
-.info h6 {
+.info h5 {
     color: var(--darkGrey);
     text-transform: capitalize;
+}
+
+.info h4 {
+    color: var(--mainBlack);
 }
 
 .info p {
@@ -53,4 +57,14 @@
     .image > div {
         height: 350px;
     }
+}
+
+.tagLink {
+    color: var(--mainBlack);
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}
+  
+.tagLink:hover {
+    color: #00dc9c;
 }
