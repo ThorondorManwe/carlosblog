@@ -16,4 +16,5 @@ body {
     font-family: "Quicksand", sans-serif;
     background: var(--mainGrey);
     color: var(--mainBlack);
+    font-size: 18px;
 }
