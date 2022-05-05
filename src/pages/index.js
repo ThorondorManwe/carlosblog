@@ -3,6 +3,7 @@ import Layout from "../components/Layout"
 import PostList from "../components/PostList"
 import * as styles from "../css/home.module.css"
 import { graphql, useStaticQuery } from "gatsby"
+import TagList from "../components/TagList"
 
 const getPosts = graphql`
 {
@@ -15,6 +16,7 @@ const getPosts = graphql`
                 slug
                 date(formatString: "MMMM Do, YYYY")
                 author
+                tags
                 image {
                 childImageSharp {
                     fluid {
@@ -37,7 +39,9 @@ export default function Home() {
   return (
     <Layout>
       <div className={styles.home}>
-        <section className={styles.right__sec}></section>
+        <section className={styles.right__sec}>
+          <TagList tags={posts} />
+        </section>
         <section className={styles.blog__sec}>
           <PostList posts={posts} />
         </section>
