@@ -19,7 +19,7 @@ const PostCard = ({ post }) => {
             <span>por {author}</span> /<span>{date}</span>
           </h5>
           <h4>
-          {tags.map((tag, index) => <Link to={`/tags/${kebabCase(tag)}`}
+            {tags.map((tag, index) => <Link to={`/tags/${kebabCase(tag)}`}
                                             key={index} className={styles.tagLink}>#{tag} </Link>)
                         }
           </h4>
