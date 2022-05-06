@@ -103,3 +103,18 @@
 .author a:hover {
     color: #15cfff;
 }
+
+.seriesLink{
+    color: var(--mainWhite);
+    text-decoration: none;
+    background: #4CAAB3;
+    padding: 8px 10px;
+    border-radius: 2%;
+    transition: all 0.3s ease-in-out;
+}
+.seriesLink:hover {
+    color: var(--darkGrey);
+}
+.seriesText{
+    margin: 1rem auto;
+}

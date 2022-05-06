@@ -19,9 +19,39 @@
     border: 1px solid red;
 }
 
+.logo-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    z-index: 200;
+}
+
+.logo-btn:hover {
+    cursor: pointer;
+}
+
+.logo-icon {
+    color: var(--mainBlack);
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+  
+@media screen and (min-width: 992px) {
+    .logo-btn, .mobile-header {
+      display: none;
+    }
+}
+
 @media screen and (max-width: 992px) {
     .right__sec, .left__sec{
         display: none;
+    }
+    .mobile-menu{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width:100%;
+        height: 50px;
     }
     .blog__sec{
         width: 100vw;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from "gatsby"
 import * as styles from "../css/navbar.module.css"
-import { FaAlignRight } from "react-icons/fa"
+import { FaSlidersH } from "react-icons/fa"
 import links from "../constants/links"
 import logo from "../images/logo.png"
 
@@ -15,9 +15,9 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <div className={styles.navCenter}>
         <div className={styles.navHeader}>
-          <img src={logo} className={styles.brandLogo} alt="thewebdev logo" />
+          <Link to="/"><img src={logo} className={styles.brandLogo} alt="carlos rangel logo" /></Link>
           <button type="button" className={styles.logoBtn} onClick={toggleNav}>
-            <FaAlignRight className={styles.logoIcon} />
+          <FaSlidersH className={styles.logoIcon} />
           </button>
         </div>
         <ul className={isOpen ? `${styles.navLinks} ${styles.showNav}` : `${styles.navLinks}`}>

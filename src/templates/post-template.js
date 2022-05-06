@@ -8,7 +8,7 @@ import { FaGithub, FaTwitterSquare, FaDev, FaLinkedin } from "react-icons/fa"
 import { kebabCase } from 'lodash'
 
 const postTemplate = ( {data}) => {
-  const { title, date, author, twitter, github, dev, linkedin, image, tags } = data.mdx.frontmatter;
+  const { title, date, author, twitter, github, dev, linkedin, image, tags, series } = data.mdx.frontmatter;
   const { body } = data.mdx;
   const img = image.childImageSharp.fluid;
   return (
@@ -27,6 +27,12 @@ const postTemplate = ( {data}) => {
                                             key={index} className={styles.tagLink}>#{tag} </Link>)
                     }
           </h5>
+          <h5 className={styles.seriesText}>
+                        {series && <Link to={`/series/${series}`} className={styles.seriesLink}>
+                                    Serie: {series}
+                                </Link>
+                        }
+                    </h5>
          </div>
          <Image fluid={img} />
          <div className={styles.content}>
@@ -57,6 +63,7 @@ query getPost($slug: String!) {
             dev
             linkedin
             tags
+            series
             image {
             childImageSharp {
                     fluid {

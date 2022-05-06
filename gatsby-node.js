@@ -1,6 +1,6 @@
 const _ = require('lodash');
 exports.createPages = async ({ actions, graphql }) => {
-  const { createPage } = actions
+  const { createPage } = actions;
   const {
     data: {
       allMdx: { edges: posts },
@@ -13,6 +13,7 @@ exports.createPages = async ({ actions, graphql }) => {
             frontmatter {
               slug
               tags
+              series
             }
           }
         }
@@ -41,6 +42,22 @@ exports.createPages = async ({ actions, graphql }) => {
             component: require.resolve("./src/templates/tags-template.js"),
             context: {
                 tag,
+            },
+        })
+    })
+
+    let seriesArr = [];
+    posts.forEach(({ node }) => {
+        const { series } = node.frontmatter;
+        seriesArr = [...seriesArr, series];
+    })
+    seriesArr = [...new Set(seriesArr)];
+    seriesArr.forEach(series => {
+        createPage({
+            path: `/series/${series}/`,
+            component: require.resolve("./src/templates/series-template.js"),
+            context: {
+                series,
             },
         })
     })

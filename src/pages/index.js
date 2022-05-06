@@ -1,9 +1,17 @@
-import React from "react"
-import Layout from "../components/Layout"
-import PostList from "../components/PostList"
-import * as styles from "../css/home.module.css"
-import { graphql, useStaticQuery } from "gatsby"
-import TagList from "../components/TagList"
+import React, {useState, useRef} from "react";
+import Layout from "../components/Layout";
+import PostList from "../components/PostList";
+import * as styles from "../css/home.module.css";
+import { graphql, useStaticQuery } from "gatsby";
+import TagList from "../components/TagList";
+import cover from "../images/posterBlogTech.jpg";
+import { FaSortAmountUp, FaSortAmountDown } from "react-icons/fa";
+import Menu from "../components/Menu/Menu";
+import Burger from "../components/Burger/Burger";
+import { useOnClickOutside } from "../constants/hooks";
+import Advert from "../components/Advert";
+import RightMenu from "../components/Menu/RightMenu";
+import SeriesList from "../components/SeriesList";
 
 const getPosts = graphql`
 {
@@ -17,6 +25,7 @@ const getPosts = graphql`
                 date(formatString: "MMMM Do, YYYY")
                 author
                 tags
+                series
                 image {
                 childImageSharp {
                     fluid {
@@ -40,6 +49,16 @@ export default function Home() {
       filteredData: [],
       query: emptyQuery
   });
+  const [open, setOpen] = useState(false);
+  const toggleLeftMenu = () => {
+    setOpen(open => !open)
+  }
+  const node = useRef();
+  useOnClickOutside(node, () => setOpen(false));
+  const [isOpen, setRight] = useState(false);
+  const toggleRightMenu = () => {
+      setRight(isOpen => !isOpen)
+  }
   const handleInputChange = event => {
     const query = event.target.value;
     const posts = response.allMdx.edges || [];
@@ -64,6 +83,22 @@ export default function Home() {
   console.log(response)
   return (
     <Layout>
+      <div className={styles.mobileMenu}>
+
+          <div ref={node}>
+            <button type="button" className={styles.logoBtn} onClick={toggleLeftMenu} >
+              <FaSortAmountDown className={styles.logoIcon} />
+            </button>
+            <Menu open={open} />
+          </div>
+
+          <h2 className={styles.mobileHeader}>carlosrangel.net</h2>
+          <button type="button" className={styles.logoBtn} onClick={toggleRightMenu}>
+            <FaSortAmountUp className={styles.logoIcon} />
+          </button>
+          <RightMenu open={isOpen} />
+      </div>
+
       <div className={styles.home}>
         <section className={styles.right__sec}>
           <TagList tags={posts} />
@@ -73,7 +108,7 @@ export default function Home() {
         </section>
         <section className={styles.left__sec}>
 
-          {/* En el proyecto original está en la sección de bog pero yo lo quiero aqui */}
+          {/* En el proyecto original está en la sección de blog pero yo lo quiero aqui */}
           <div className={styles.searchBox}>
             <input
               className={styles.searchInput}
@@ -83,6 +118,9 @@ export default function Home() {
               onChange={handleInputChange}
             />
           </div>
+
+          <Advert imgPath={cover} />
+          <SeriesList seriesList={posts} />
 
         </section>
       </div>
