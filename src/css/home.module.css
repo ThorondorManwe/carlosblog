@@ -6,17 +6,14 @@
 
 .right__sec{
     min-height: 100vh;
-    border: 1px solid black;
 }
 
 .left__sec{
     min-height:100vh;
-    border: 1px solid green;
 }
 
 .blog__sec{
     min-height:100vh;
-    border: 1px solid red;
 }
 
 .logo-btn {
