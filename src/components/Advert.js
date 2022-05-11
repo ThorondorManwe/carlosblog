@@ -4,7 +4,9 @@ const Advert = ({ imgPath }) => {
     return (
       <section className={styles.sponserAds}>
         <div className={styles.advert1}>
-          <img src={imgPath} className={styles.coverImg} alt="the book cover" />
+          <a href="https://www.linkedin.com/in/carlos-rangel-931a5470/" target="_blank" rel="noreferrer noopener">
+            <img src={imgPath} className={styles.coverImg} alt="the book cover" />
+          </a>
         </div>
       </section>
     )

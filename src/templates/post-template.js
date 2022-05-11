@@ -32,7 +32,8 @@ const postTemplate = ( {data}) => {
                                     Serie: {series}
                                 </Link>
                         }
-                    </h5>
+          </h5>
+          
          </div>
          <Image fluid={img} />
          <div className={styles.content}>

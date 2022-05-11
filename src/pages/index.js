@@ -7,7 +7,7 @@ import TagList from "../components/TagList";
 import cover from "../images/posterBlogTech.jpg";
 import { FaSortAmountUp, FaSortAmountDown } from "react-icons/fa";
 import Menu from "../components/Menu/Menu";
-import Burger from "../components/Burger/Burger";
+/* import Burger from "../components/Burger/Burger"; */
 import { useOnClickOutside } from "../constants/hooks";
 import Advert from "../components/Advert";
 import RightMenu from "../components/Menu/RightMenu";
@@ -101,14 +101,13 @@ export default function Home() {
 
       <div className={styles.home}>
         <section className={styles.right__sec}>
+        
+
           <TagList tags={posts} />
         </section>
-        <section className={styles.blog__sec}>
-          <PostList posts={posts} />
-        </section>
-        <section className={styles.left__sec}>
 
-          {/* En el proyecto original está en la sección de blog pero yo lo quiero aqui */}
+        <section className={styles.blog__sec}>
+          
           <div className={styles.searchBox}>
             <input
               className={styles.searchInput}
@@ -118,6 +117,11 @@ export default function Home() {
               onChange={handleInputChange}
             />
           </div>
+
+          <PostList posts={posts} />
+        </section>
+
+        <section className={styles.left__sec}>       
 
           <Advert imgPath={cover} />
           <SeriesList seriesList={posts} />

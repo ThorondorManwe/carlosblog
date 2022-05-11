@@ -5,6 +5,10 @@
     background: var(--mainWhite);
 }
 
+/* .image__small {
+    width: 1200px;
+} */
+
 .link {
     border: 1px solid var(--mainBlack);
     padding: 4px 8px;
@@ -68,6 +72,7 @@
 
 .content {
     margin: 2rem 0;
+    font-size: 25px;
 }
 
 .content h2 {
