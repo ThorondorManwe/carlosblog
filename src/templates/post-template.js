@@ -37,7 +37,9 @@ const postTemplate = ( {data}) => {
          </div>
          <Image fluid={img} />
          <div className={styles.content}>
+
            <MDXRenderer>{body}</MDXRenderer>
+
          </div>
          <div className={styles.author}>
            <h1>{author}</h1>
@@ -51,6 +53,7 @@ const postTemplate = ( {data}) => {
     </Layout>
   )
 }
+
 export const query = graphql`
 query getPost($slug: String!) {
     mdx(frontmatter: { slug: { eq: $slug } }) {
@@ -77,4 +80,5 @@ query getPost($slug: String!) {
     }
 }
 `
+
 export default postTemplate;

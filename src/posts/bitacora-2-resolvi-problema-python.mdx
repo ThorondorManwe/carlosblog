@@ -1,0 +1,424 @@
+---
+title: "Bitácora del capitán: Resolví un problema de la vida real con Python (enviando mails por SMTP)"
+slug: bitacora-del-capitan-problema-de-la-vida-real-con-python-enviando-emails-por-smtp
+image: ./bitacora-2.jpg
+date: 2022-05-12
+author: Carlos Rangel
+twitter: https://twitter.com/CarlosRanghul
+github: https://github.com/ThorondorManwe
+dev: https://dev.to/thorondormanwe
+linkedin: https://www.linkedin.com/in/carlos-rangel-931a5470/
+series: Bitacora-Python
+tags: ['bitacora', 'Python']
+excerpt: Te cuento cómo resolví un problema de la vida real con Python
+---
+
+import * as styles from "../css/postTemplate.module.css"
+
+**Python es el primer lenguaje que aprendí como autodidacta**, que es lo mismo que decirte que es el primer lenguaje que aprendí en serio. Me gusta su simplicidad y 
+la forma en que puedes pasar de una abstracción, es decir, del plan que tienes en tu cabeza para realizar alguna acción sobre los datos hasta una aplicación que 
+hace el trabajo por ti. Por eso, aunque JavaScript es el amo supremo del desarrollo web y creo que es la mejor apuesta para vivir de la programación, 
+siempre seré un fiel seguidor de Python y de todo su ecosistema.
+
+Ayer me salió un trabajo que me tomó desprevenido, pero **salí victorioso gracias a la ayuda del código**.
+
+Suelo ayudar a mi antiguo empleador con la parte de tecnología, sobre todo en el área de negocio encargada del E-learning. Una parte se hace con la 
+implementación de *LMS* (Learning Management System) en WordPress y la otra, más antigua, es con Moodle. En la instalación de Moodle tenemos los exámenes que 
+los estudiantes pueden resolver en línea. 
+
+Mi ex empleador hace capacitaciones presenciales y después me pasa las preguntas del examen y las subo a Moodle. El proceso es bastante sencillo:
+
+1. Creo las preguntas en formato *GIFT* dentro de un editor de código.
+2. Importo las preguntas dentro de un curso de Moodle.
+3. Creo la plantilla de certificado que se emitirá para todos aquellos que resuelvan el cuestionario y obtengan el puntaje necesario.
+4. Subo a los usuarios con un documento *.csv*.
+5. Envío a los usuarios su usuario, contraseña, y la URL con la que podrán acceder al examen. En esta parte les mando una redacción de plantilla y solo sustituyo sus datos, usuario y contraseña.
+
+El punto 5, el de **enviar el usuario es el que siempre me ha parecido más tedioso**. Los otros puntos, los de creación de cuestionario y subida de usuarios los 
+pseudo automaticé hace tiempo, pero **el envío de correos de forma masiva se me había dificultado por años**. En meses recientes aprendí a usar herramientas de 
+*email-marketing* como MailChimp, pero creo que usar algo así para un correo que se enviará una sola vez, y para el cual no se desea hacer seguimiento o 
+medición de ninguna clase, es exagerado.
+
+**Por años había soñado con hacer el envío automatizado de correos con Python**, por una razón u otra no había sido posible para mí hasta ayer, que me puse a enviar 
+el primer correo después de generar las contraseñas y los usuarios, cuando me di cuenta de que **no deseaba realizar el proceso, de forma manual, para los más de cuarenta usuarios que 
+tenía que mandar**.
+
+Así que abrí un editor de código, una nueva pestaña en el navegador y me puse a trabajar.
+
+Lo primero que hice fue **buscar en [Oreilly Media](https://www.oreilly.com/)** porque es una plataforma que me ha ayudado mucho con otros temas de programación como 
+JavaScript y React (es muy buena para aprender temas relacionados con tecnología, te la recomiendo bastante). Y me encontré con algunos indicios:
+
+    "Python has a library for the Simple Mail Transfer Protocol (SMTP) that you can use to send emails:"
+    Raspberry Pi Cookbook, 2nd Edition
+    Simon Monk
+
+**Así supe que tenía que usar el protocolo SMTP**, el cual me sonaba bastante porque lo había usado cuando configuraba clientes de correo para mi trabajo anterior. 
+Aunque los códigos que encontré en los libros de Oreilly me parecieron bastante buenos, me di cuenta de que **todos usaban Localhost**, lo cual no estaba dentro de mis 
+planes, así que con este indicio me puse a **buscar en Google**.
+
+Encontré dos resultados interesantes en **la SERP de Google**:
+
+![Python send email smtp authentication](https://res.cloudinary.com/dc4gpn7f6/image/upload/v1652402409/sickfits/SERP_python_send_email_smtp_authentication_h73oyn.png "Python send email smtp authentication")
+
+El código de [codegrepper.com](https://www.codegrepper.com/code-examples/python/python+smtplib.smtp+username+password) es interesante porque ofrece indicios de cómo autenticarse en el servidor de correo. El problema es que este correo manda un mensaje 
+sencillo y **no ofrece la oportunidad de añadir “Subject” al mensaje**.
+
+```python
+import smtplib
+
+server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+server.login("your username", "your password")
+server.sendmail(
+  "from@address.com", 
+  "to@address.com", 
+  "this message is from python")
+server.quit()
+```
+
+Este código manda un mensaje sencillo, pero sin asunto.
+
+Decidí buscar más y probé con el otro enlace, el de la **[documentación de Python](https://docs.python.org/3/library/smtplib.html "smtplib")**.
+
+Algo que siempre me echa para atrás al leer documentación de lenguajes de programación es la forma en la que están redactados, porque a menudo **incluyen 
+codificaciones sin ejemplos concretos de cómo utilizarlas y esto es confuso**. Supongo que con la práctica se volverá más fácil leer estos documentos.
+
+
+Para mi suerte, en la parte inferior de la página encontré un enlace para ver ejemplos de código. Esta parte fue más sencilla de leer porque solo hay que 
+interpretar lo que hace el código.
+
+![python docs smtp](https://res.cloudinary.com/dc4gpn7f6/image/upload/v1652402425/sickfits/smtplib3_x2o2ev.png "python docs smtp")
+
+Encontré un ejemplo que mandaba mails a varias cuentas a la vez así que **decidí probarlo en VSCode**.
+
+```python
+# Import smtplib for the actual sending function
+import smtplib
+
+# And imghdr to find the types of our images
+import imghdr
+
+# Here are the email package modules we'll need
+from email.message import EmailMessage
+
+me = "<Usuario_de_tu_correo>"
+family = ['<Correo_1>', '<Correo_2>', '<Correo_3>']
+# Create the container email message.
+msg = EmailMessage()
+msg['Subject'] = 'Prueba de envío masivo con script Python'
+# me == the sender's email address
+# family = the list of all recipients' email addresses
+msg['From'] = me
+msg['To'] = ', '.join(family)
+msg.preamble = 'You will not see this in a MIME-aware mail reader.\n'
+
+# Open the files in binary mode.  Use imghdr to figure out the
+# MIME subtype for each specific image.
+#for file in pngfiles:
+#    with open(file, 'rb') as fp:
+#        img_data = fp.read()
+#    msg.add_attachment(img_data, maintype='image',
+#                                 subtype=imghdr.what(None, img_data))
+
+msg.set_content("""\
+Buenaventura a todo aquel que lea estos bits convertidos en letras!
+
+Esto es una prueba de correo enviada por el buen Charles, no os asustéis
+
+[1] https://www.youtube.com/watch?v=MTNsAl0PHrI
+
+--Carlos Rangel
+""")
+
+# Send the email via our own SMTP server.
+with smtplib.SMTP_SSL('<Puerto_SMTP_de_salida>', 465) as s:
+    s.login("<Usuario_de_tu_correo>", "<Contraseña_de_tu_correo>")
+    s.send_message(msg)
+```
+
+**Comenté las líneas de código que envían imágenes**, pero me gustaría probar después esta funcionalidad. Hice un envío a tres diferentes cuentas de correo y me di 
+cuenta de que funcionaba, pero había un pequeño problema y es que **el receptor veía a qué otras cuentas de correo les habían mandado mensajes**.
+
+Lo bueno es que ya tenía la oportunidad de añadir un asunto al correo.
+
+A partir de aquí hice algunas pruebas más hasta que **llegué a la conclusión de que era mejor que el programa enviara un solo mensaje**, pero a cada usuario en una 
+lista o en un diccionario. Al final usé diccionarios para definir la información de cada usuario, y los metí todos dentro de una lista. 
+
+**Mi solución fue utilizar un for de cero hasta el len -longitud de la lista**, y en cada iteración mandar un email con la estructura deseada. 
+Para esta prueba hice un texto improvisado y un poema que copié de internet para no hacer tan pesado el ejercicio a los receptores (usé correos de gente que 
+conozco para la prueba). **Usé f-strings para embeber datos de los diccionarios dentro del texto, de esta forma tendría un mensaje personalizado para cada persona**.
+ En el cuerpo del mensaje incluí un saludo con su nombre y otros datos para hacer prueba. Me di cuenta de que ya estaba listo para mandar los correos.
+
+En la siguiente versión del programa **utilicé el mensaje que tenía como machote y le metí los datos de usuario en el texto**.
+
+![mensaje machote](https://res.cloudinary.com/dc4gpn7f6/image/upload/v1652404353/sickfits/mensaje_Original_bhore5.png "mensaje machote")
+
+Yo solía tomar una tabla de excel con los usuarios, de allí copiaba el correo y abría Outlook. En el cuerpo del mensaje pegaba el machote desde un documento de
+ Word y después sustituir los datos como el usuario y la contraseña que aparecen en la tabla. Al final ponía el correo del usuario y lo mandaba con copia para 
+ mi ex empleador. Todo este proceso me parecía tedioso y más cuando se trataba de más de diez usuarios.
+
+Ahora, después de unos minutos de investigación y pruebas **estaba frente a un código en Python que potencialmente podría hacer todo este proceso por mí**.
+
+Decidí que podía personalizarlo todavía más por lo que incluí el nombre del usuario en el “Subject” del correo:
+
+```python
+msg['Subject'] = f'Acceso al cuestionario de XXXXXXXXX para {mensajeNombre} {mensajeApellido}'
+```
+
+```python
+# Prepara todo para mandar mail
+# Import smtplib for the actual sending function
+import smtplib
+
+# And imghdr to find the types of our images
+import imghdr
+
+# Here are the email package modules we'll need
+from email.message import EmailMessage
+
+
+# Manda mail en loop a cada miembro de la lista - diccionario
+# lista de diccionarios
+# Reccorre cada usuario en la lista y obtiene los datos de su diccionario, usa esos datos para el mensaje del correo
+# Manda un mensjae de correo por usuario con copia para Antiguo Empleador
+
+listaUsuarios = [
+    {
+    'usuario': '<Correo_Usuario>', 
+    'nombre': '<Nombre_Usuario>', 
+    'apellido': '<Apellido_Usuario>', 
+    'password': '<Password_Usuario>', 
+    'email': '<Correo_Usuario>', 
+    'curso': '<Curso_Usuario>'
+    },
+    [Más filas iguales]
+]
+
+
+for i in range(len(listaUsuarios)):
+    print(listaUsuarios[i])
+    mensajeUsuario = f"{listaUsuarios[i]['usuario']}"
+    mensajeNombre = f"{listaUsuarios[i]['nombre']}"
+    mensajeApellido = f"{listaUsuarios[i]['apellido']}"
+    mensajeCorreo = f"{listaUsuarios[i]['email']}"
+    mensajeContraseña = f"{listaUsuarios[i]['password']}"
+    print(mensajeUsuario)
+    print(mensajeNombre)
+    print(mensajeApellido)
+    print(mensajeCorreo)
+    print(mensajeContraseña)
+
+    #Aquí manda un mensaje a cada usaurio
+    me = "<Usuario_de_tu_correo>"
+    
+    # Create the container email message.
+    msg = EmailMessage()
+    msg['Subject'] = f'Acceso al cuestionario de XXXXXXXXX para {mensajeNombre} {mensajeApellido}'
+
+    msg['From'] = me
+    msg['To'] = mensajeCorreo
+    msg['CC'] = "<Correo_al_que_llega_la_copia>"
+    msg.preamble = 'You will not see this in a MIME-aware mail reader.\n'
+
+    msg.set_content(f"""\
+        Hola {mensajeNombre} {mensajeApellido},
+
+
+        Buenas noches.
+
+        Te comparto tu usuario y contraseña para la plataforma E-learning donde podrás acceder 
+        al cuestionario del Curso "XXXXXXXXXXXXXXXXXXXXXX"
+
+        Tus datos de acceso:
+
+        Usuario: {mensajeUsuario}
+        Contraseña: {mensajeContraseña}
+
+
+        Puedes acceder a la plataforma mediante la siguiente liga: 
+
+        [Texto del Link] <URL>
+
+        
+        Cualquier duda sobre el uso de la misma se puede resolver conmigo, en este correo.
+
+        Saludos cordiales
+
+
+        --Carlos Rangel
+        """)
+
+    # Send the email via our own SMTP server.
+    with smtplib.SMTP_SSL('<Puerto_SMTP_de_salida>', 465) as s:
+         s.login("<Usuario_de_tu_correo>", "<Contraseña_de_tu_correo>")
+         s.send_message(msg)
+```
+
+Ya estaba casi listo para resolver la tarea hasta que me di cuenta de que como había hecho mi código necesitaba una lista de diccionarios con los datos de cada usuario dentro, 
+y los datos de mis usuarios estaban en un .csv, así que **podría copiar a mano cada pedazo de información, o bien, ya que estaba con el espíritu de programador, 
+debía encontrar una forma de capturar todos los datos del .csv dentro de un diccionario para después usarlo en mi programa**.
+
+Así que me sumergí de nuevo en Google y al buscar “read csv python” me encontré con un resultado muy interesante.
+
+
+![Python CSV](https://res.cloudinary.com/dc4gpn7f6/image/upload/v1652402413/sickfits/buscarPythoncsv_smwnmh.png "Python CSV SERP")
+
+Un tutorial de [Real Python](https://realpython.com/python-csv/) que te enseña cómo leer *.csv*, así que copié el código en el editor y me puse a modificarlo.
+
+En resumen el código abre un .csv, después recorre cada fila con un for y captura los datos de cada columna dentro de un diccionario que llamé “dict”. 
+Después usa el método .append de las listas para meter cada diccionario dentro de la lista “usuarios”.
+
+Las tres últimas líneas del código guardan esta lista “usuarios” dentro de un .txt llamado “usuarios.txt”
+
+```python
+import csv
+ 
+usuarios = []
+ 
+with open('usuarios_cuestionario.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        if line_count == 0:
+            print(f'Column names are {", ".join(row)}')
+            line_count += 1
+        else:
+            #print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
+            # Aquí hacemos el diccionario para cada usuario
+            dict = {
+                "usuario": row[0], 
+                "nombre": row[1], 
+                "apellido": row[2], 
+                "password": row[3], 
+                "email": row[4], 
+                "curso": row[5]
+                }
+            usuarios.append(dict)
+            line_count += 1
+    print(f'Processed {line_count} lines.')
+    print(usuarios)
+ 
+    usuariosFile = open('usuarios.txt', 'w')
+    usuariosFile.write(str(usuarios))
+    usuariosFile.close()
+```
+
+Entonces ya **con la lista de diccionarios y los datos de cada usuario puedo enviar los correos**.
+La versión final tiene un **sleep porque el servidor cierra la conexión si ve demasiados mensajes**.
+
+```python
+# Prepara todo para mandar mail
+# Import smtplib for the actual sending function
+import smtplib
+
+# Here are the email package modules we'll need
+from email.message import EmailMessage
+
+import time
+
+
+# Manda mail en loop a cada miembro de la lista - diccionario
+# lista de diccionarios
+# Recorre cada usuario en la lista y obtiene los datos de su diccionario, usa esos datos para el mensaje del correo
+# Manda un mensaje de correo por usuario con copia para otro correo
+
+
+# Esta es una lista de ejemplo, usa la que te dé de resultado en el otro programa
+listaUsuarios = [
+    {
+    'usuario': '<Correo_Usuario>', 
+    'nombre': '<Nombre_Usuario>', 
+    'apellido': '<Apellido_Usuario>', 
+    'password': '<Password_Usuario>', 
+    'email': '<Correo_Usuario>', 
+    'curso': '<Curso_Usuario>'
+    },
+    [Más filas iguales]
+]
+
+
+for i in range(len(listaUsuarios)):
+    print(listaUsuarios[i])
+    mensajeUsuario = f"{listaUsuarios[i]['usuario']}"
+    mensajeNombre = f"{listaUsuarios[i]['nombre']}"
+    mensajeApellido = f"{listaUsuarios[i]['apellido']}"
+    mensajeCorreo = f"{listaUsuarios[i]['email']}"
+    mensajeContraseña = f"{listaUsuarios[i]['password']}"
+    print(mensajeUsuario)
+    print(mensajeNombre)
+    print(mensajeApellido)
+    print(mensajeCorreo)
+    print(mensajeContraseña)
+
+    #Aquí manda un mensaje a cada usaurio
+    me = "<Usuario_de_tu_correo>"
+    
+    # Create the container email message.
+    msg = EmailMessage()
+    msg['Subject'] = f'Acceso al cuestionario de XXXXXXXXX para {mensajeNombre} {mensajeApellido}'
+
+    msg['From'] = me
+    msg['To'] = mensajeCorreo
+    msg['CC'] = "<Correo_al_que_llega_la_copia>"
+    msg.preamble = 'You will not see this in a MIME-aware mail reader.\n'
+
+    msg.set_content(f"""\
+        Hola {mensajeNombre} {mensajeApellido},
+
+
+        Buenas noches.
+
+        Te comparto tu usuario y contraseña para la plataforma E-learning donde podrás acceder al cuestionario del Curso 
+        "XXXXXXXXX"
+
+        Tus datos de acceso:
+
+        Usuario: {mensajeUsuario}
+        Contraseña: {mensajeContraseña}
+
+
+        Puedes acceder a la plataforma mediante la siguiente liga: 
+
+        [Texto de Link] <URL>
+
+        
+        Cualquier duda sobre el uso de la misma se puede resolver conmigo, en este correo.
+
+        Saludos cordiales
+
+
+        --Carlos Rangel
+        """)
+
+    # Send the email via our own SMTP server.
+    with smtplib.SMTP_SSL('<Puerto_SMTP_de_salida>', 465) as s:
+        time.sleep(5)
+        s.login("<Usuario_de_tu_correo>", "<Contraseña_de_tu_correo>")
+        s.send_message(msg)
+```
+
+Así que se espera 5 segundos antes de enviar cada mensaje y así no tuve problemas.
+
+
+**Como puedes ver a mi programa le falta mucho trabajo**. Le falta importar el diccionario de usuarios sin necesidad de copiarlo a mano dentro del programa. A lo mejor se podría juntar la lógica
+general dentro de un código que unifique lo que hace el programa que lee el *.csv* y el programa que envía los correos. Se podría mandar cada parte a una clase por separado con sus
+funciones y después importarlas en el código central.
+
+
+Pero como te dije, esto es algo que hice para resolver un trabajo que hubiera sido bastante tedioso para mí realizar a mano, y el bonus es que ahora tengo dos programas funcionales para
+resolver dos tareas en concreto, ya después puedo trabajar en las mejoras que tengo en mente.
+
+Mientras trabajaba en esto busqué en mis libros de Python cómo se hacen los diccionarios en este lenguaje, porque llevo meses trabajando con JavaScript y no había tocado Python hasta ayer. 
+Tampoco recordaba bien cómo es el método para meter datos a una lista (en mi mente era algo relacionado con *push*, pero esto podría ser porque he estado estudiando GitHub en los últimos días).
+Aunque algunos podrían decir que mucho de este código lo copié de la red y tienen razón, parte del trabajo es identificar qué código puede servirte, porque esto que te mostré es la punta del *iceberg*,
+hay mucho código que descarté de un vistazo o después de correr la primera prueba y ver que no era capaz de enviar un solo correo. 
+
+Así que **interpretar lo que hace un programa para usarlo a tu favor
+y resolver el problema que tienes entre manos es parte integral de la programación**, así es como lo veo al menos, por lo que no tengo ningún remordimiento. 
+
+
+Tenía un problema que resolver,
+busqué código en línea, lo modifiqué, lo combiné según mis necesidades y así llegué a mi solución.
+
+
+Espero que hayas disfrutado esta entrada tanto como yo disfruté escribirla, deseo que si tienes un problema similar al mío este código te ayude en un futuro. Si tienes algo que decir respecto
+a esta u otra entrada o cualquier mensaje relacionad con la tecnología, abajo tienes mis redes sociales y también puedes ir a la sección de contacto. Estaré muy feliz de leerte 🤖.

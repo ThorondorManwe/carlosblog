@@ -13,7 +13,7 @@ const About = () => {
           </h3>
 
           <p>
-            En junio de 2021 comencé a estudiar desarrollo web en <a href="https://www.theodinproject.com/" target="_blank" rel="noopener noreferrer">The Odin Project</a> y desde entonces he realizado algunos proyectos pequeños. Aunque esta plataforma es genial 
+            Comencé a estudiar desarrollo web en <a href="https://www.theodinproject.com/" target="_blank" rel="noopener noreferrer">The Odin Project</a> y desde entonces he realizado algunos proyectos pequeños. Aunque esta plataforma es genial 
             pronto me vi pasando de un curso a otro para entender lo que pedían en los proyectos, así es como llegué 
             a <a href="https://wesbos.com/courses" target="_blank" rel="noopener noreferrer"> los cursos de Wes Bos</a> (es de lo mejor, gracias a él pude entender
             temas como arrow functions y callback functions), y algunos cursos en Udemy.
